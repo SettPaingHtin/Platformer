@@ -16,7 +16,7 @@ const config = {
   },
   scene: [BootScene, GameScene, UIScene],
   scale: {
-    zoom: 5,
+    zoom: 3,
     autoCenter: Phaser.Scale.CENTER_BOTH
   }
 };

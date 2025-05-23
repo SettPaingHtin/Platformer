@@ -104,7 +104,9 @@ export default class GameScene extends Phaser.Scene {
       });
   
       this.scene.launch('UIScene', { game: this });
-      this.cameras.main.startFollow(this.player, true, 0.1, 0.1, 60, 0);
+  
+      this.lookAheadOffset = 40;
+  
       this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
       this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     }
@@ -184,6 +186,17 @@ export default class GameScene extends Phaser.Scene {
           enemy.setData('direction', 1);
         }
       });
+  
+      // ✅ Smooth camera look-ahead based on movement
+      const cam = this.cameras.main;
+      const dir = body.velocity.x > 0 ? 1 : body.velocity.x < 0 ? -1 : 0;
+      const lookX = this.player.x + dir * this.lookAheadOffset;
+      const lookY = this.player.y;
+  
+      cam.centerOn(
+        Phaser.Math.Linear(cam.midPoint.x, lookX, 0.1),
+        Phaser.Math.Linear(cam.midPoint.y, lookY, 0.1)
+      );
     }
   
     handleEnemyCollision(player, enemy) {
